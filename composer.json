@@ -1,5 +1,5 @@
 {
-	"name": "mishak87/web-resource-management",
+	"name": "mishak/web-resource-management",
 	"description": "Tools for management of scripts and styles (using Nette Framework)",
 	"keywords": [ "nette", "scripts", "style", "resource", "dependency", "manager"],
 	"authors": [
@@ -12,7 +12,7 @@
 	],
 	"autoload":{
         "psr-0":{
-            "Mishak87\\WebResourceManagement":""
+            "Mishak\\WebResourceManagement":""
         }
     },
 	"require": {

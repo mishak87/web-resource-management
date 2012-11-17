@@ -1,6 +1,6 @@
 <?php
 
-namespace Mishak87\WebResourceManagement;
+namespace Mishak\WebResourceManagement;
 
 use Nette\Utils\Html;
 
