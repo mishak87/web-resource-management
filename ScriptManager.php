@@ -16,7 +16,7 @@ class ScriptManager {
 
 	private $translator;
 
-	public function __construct($scripts, Nette\Localization\ITranslator $translator)
+	public function __construct($scripts, Nette\Localization\ITranslator $translator = NULL)
 	{
 		$this->scripts = $scripts;
 		$this->translator = $translator;
@@ -142,7 +142,7 @@ class ScriptManager {
 		$script = Html::el('script', array('type' => 'text/javascript'));
 		$contents = "\nvar translations = typeof translations == 'undefined' ? {} : translations;\n";
 		foreach (array_unique($this->translations) as $message) {
-			$contents .= 'translations[' . json_encode($message) . '] = ' . json_encode($this->translator ? $this->translator->translate($message) : $message) . ";\n";
+			$contents .= 'translations[' . json_encode($message) . '] = ' . json_encode(NULL !== $this->translator ? $this->translator->translate($message) : $message) . ";\n";
 		}
 		$script->setText($contents);
 		return $script;
