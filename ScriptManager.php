@@ -242,7 +242,7 @@ class ScriptManager {
 		$filenamePrefix = NULL;
 		if ($this->usePublic && isset($script->public)) {
 			return $script->public;
-		} elseif (isset($script->minified) && $this->useMinified || !isset($script->filename)) {
+		} elseif (isset($script->minified) && $this->useMinified || !isset($script->filename) && !isset($script->multiple)) {
 			$usedMinified = TRUE;
 			$filename = $script->minified;
 		} elseif (isset($script->filename)) {
