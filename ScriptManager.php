@@ -248,8 +248,8 @@ class ScriptManager {
 		} elseif (isset($script->filename)) {
 			$filename = $script->filename;
 		} elseif (isset($script->multiple)) {
-			$multiple = $script->multiple->files;
-			$filenamePrefix = $script->multiple->dir . '/' . ($script->multiple->prefix ?: '');
+			$multiple = $script->multiple['files'];
+			$filenamePrefix = $script->multiple['dir'] . '/' . ($script->multiple['prefix'] ?: '');
 		} else {
 			throw new \Exception("Script '$script->name' is missing filename or its minified version.");
 		}
