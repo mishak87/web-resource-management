@@ -104,6 +104,13 @@ class ScriptManager {
 		return $this;
 	}
 
+	private $tempDir;
+
+	public function setTempDirectory($dir)
+	{
+		$this->tempDir = $dir;
+	}
+
 	/**
 	 * Holds all translations needed by scripts
 	 * @var array
@@ -231,6 +238,8 @@ class ScriptManager {
 	private function generateFile($script)
 	{
 		$usedMinified = FALSE;
+		$multiple = NULL;
+		$filenamePrefix = NULL;
 		if ($this->usePublic && isset($script->public)) {
 			return $script->public;
 		} elseif (isset($script->minified) && $this->useMinified || !isset($script->filename)) {
@@ -238,10 +247,21 @@ class ScriptManager {
 			$filename = $script->minified;
 		} elseif (isset($script->filename)) {
 			$filename = $script->filename;
+		} elseif (isset($script->multiple)) {
+			$multiple = $script->multiple->files;
+			$filenamePrefix = $script->multiple->dir . '/' . ($script->multiple->prefix ?: '');
 		} else {
 			throw new \Exception("Script '$script->name' is missing filename or its minified version.");
 		}
-		$md5 = md5_file($filename);
+		if (NULL !== $multiple) {
+			$hashes = array();
+			foreach ($multiple as $filename) {
+				$hashes[] = md5_file($filenamePrefix . $filename);
+			}
+			$md5 = md5(implode(':', $hashes));
+		} else {
+			$md5 = md5_file($filename);
+		}
 		$dir = $this->outputDirectory;
 		$extension = '.js';
 		if ($this->useMinified && $this->compressCommand !== NULL || $usedMinified) {
@@ -251,6 +271,15 @@ class ScriptManager {
 		$output = $dir . '/' . $outputFilename;
 		if (!file_exists($output)) {
 			$contents = NULL;
+			if ($multiple) {
+				$filename = $this->tempDir . '/' . $md5 . '.js';
+				$f = fopen($filename, 'wb');
+				foreach ($files as $filename) {
+					fwrite($f, file_get_contents($filenamePrefix . $filename));
+					fwrite($f, "\n");
+				}
+				fclose($f);
+			}
 			if ($usedMinified) {
 				copy($filename, $output);
 			} elseif ($this->useMinified && $this->compressCommand !== NULL) {
